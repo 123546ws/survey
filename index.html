@@ -1,0 +1,1218 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<title>学府路地铁站换乘衔接调查问卷</title>
+<style>
+:root {
+  --primary: #1a73e8;
+  --primary-dark: #1557b0;
+  --primary-light: #e8f0fe;
+  --success: #0d904f;
+  --warning: #f9ab00;
+  --danger: #d93025;
+  --bg: #f5f7fa;
+  --card: #ffffff;
+  --text: #202124;
+  --text-secondary: #5f6368;
+  --border: #dadce0;
+  --shadow: 0 2px 8px rgba(0,0,0,0.08);
+  --shadow-lg: 0 8px 30px rgba(0,0,0,0.12);
+  --radius: 16px;
+  --radius-sm: 10px;
+  --transition: 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+}
+* { margin: 0; padding: 0; box-sizing: border-box; }
+body {
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "PingFang SC", "Microsoft YaHei", sans-serif;
+  background: linear-gradient(135deg, #e8eaed 0%, #f5f7fa 30%, #e8f0fe 100%);
+  min-height: 100vh;
+  display: flex;
+  justify-content: center;
+  align-items: flex-start;
+  padding: 20px 12px 40px;
+  color: var(--text);
+  -webkit-tap-highlight-color: transparent;
+  user-select: none;
+}
+
+/* ========== Container ========== */
+.app-container {
+  width: 100%;
+  max-width: 680px;
+  position: relative;
+}
+
+/* ========== Header Bar ========== */
+.header {
+  background: var(--card);
+  border-radius: var(--radius);
+  padding: 18px 24px;
+  margin-bottom: 16px;
+  box-shadow: var(--shadow);
+  display: flex;
+  align-items: center;
+  gap: 14px;
+}
+.header-icon {
+  width: 44px; height: 44px; border-radius: 12px;
+  background: linear-gradient(135deg, var(--primary), #4a8df0);
+  display: flex; align-items: center; justify-content: center;
+  font-size: 22px; color: white; flex-shrink: 0;
+}
+.header-info { flex: 1; min-width: 0; }
+.header-title { font-size: 15px; font-weight: 600; color: var(--text); }
+.header-sub { font-size: 12px; color: var(--text-secondary); margin-top: 2px; }
+.header-badge {
+  font-size: 11px; background: var(--primary-light); color: var(--primary);
+  padding: 4px 10px; border-radius: 100px; font-weight: 500; flex-shrink: 0;
+}
+
+/* ========== Progress Bar ========== */
+.progress-wrap {
+  background: var(--card); border-radius: var(--radius); padding: 16px 24px;
+  margin-bottom: 16px; box-shadow: var(--shadow);
+}
+.progress-top { display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px; }
+.progress-label { font-size: 13px; color: var(--text-secondary); font-weight: 500; }
+.progress-pct { font-size: 13px; color: var(--primary); font-weight: 600; }
+.progress-bar {
+  width: 100%; height: 8px; background: #e8eaed; border-radius: 100px; overflow: hidden;
+}
+.progress-fill {
+  height: 100%; background: linear-gradient(90deg, var(--primary), #4a8df0);
+  border-radius: 100px; transition: width 0.4s ease;
+}
+
+/* ========== Card ========== */
+.card {
+  background: var(--card); border-radius: var(--radius);
+  padding: 28px 24px; box-shadow: var(--shadow);
+  margin-bottom: 16px;
+  transition: var(--transition);
+  animation: fadeSlideIn 0.35s ease;
+}
+@keyframes fadeSlideIn {
+  from { opacity: 0; transform: translateY(16px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+.card-welcome { text-align: center; padding: 40px 28px; }
+.welcome-icon {
+  width: 72px; height: 72px; border-radius: 20px;
+  background: linear-gradient(135deg, var(--primary), #6299f0);
+  display: flex; align-items: center; justify-content: center;
+  font-size: 36px; color: white; margin: 0 auto 20px;
+  box-shadow: 0 4px 16px rgba(26,115,232,0.25);
+}
+.card-welcome h1 { font-size: 22px; font-weight: 700; margin-bottom: 8px; }
+.card-welcome .subtitle { font-size: 14px; color: var(--text-secondary); line-height: 1.6; }
+.welcome-meta {
+  display: flex; gap: 24px; justify-content: center; margin-top: 24px; flex-wrap: wrap;
+}
+.welcome-meta-item { text-align: center; }
+.welcome-meta-item .num { font-size: 24px; font-weight: 700; color: var(--primary); }
+.welcome-meta-item .lbl { font-size: 12px; color: var(--text-secondary); margin-top: 4px; }
+.welcome-note {
+  margin-top: 24px; padding: 14px 16px; background: #fef7e0; border-radius: var(--radius-sm);
+  font-size: 13px; color: #5f4b00; line-height: 1.6; text-align: left;
+}
+
+/* ========== Question Styles ========== */
+.q-section-title {
+  font-size: 13px; font-weight: 600; color: var(--primary); text-transform: uppercase;
+  letter-spacing: 1px; margin-bottom: 16px; padding-bottom: 8px;
+  border-bottom: 2px solid var(--primary-light);
+}
+.q-num {
+  display: inline-flex; align-items: center; justify-content: center;
+  width: 28px; height: 28px; border-radius: 8px;
+  background: var(--primary); color: white; font-size: 13px; font-weight: 700;
+  margin-right: 8px; flex-shrink: 0;
+}
+.q-num.core {
+  background: var(--danger);
+  animation: pulse-core 2s infinite;
+}
+@keyframes pulse-core {
+  0%, 100% { box-shadow: 0 0 0 0 rgba(217,48,37,0.4); }
+  50% { box-shadow: 0 0 0 8px rgba(217,48,37,0); }
+}
+.q-text {
+  font-size: 16px; font-weight: 600; line-height: 1.5; margin-bottom: 18px;
+  display: flex; align-items: flex-start; gap: 4px;
+}
+.q-core-tag {
+  font-size: 10px; background: #fce8e6; color: var(--danger);
+  padding: 2px 8px; border-radius: 100px; font-weight: 600;
+  white-space: nowrap; margin-left: 6px; align-self: center;
+}
+.options { display: flex; flex-direction: column; gap: 8px; }
+.option {
+  display: flex; align-items: center; gap: 12px;
+  padding: 14px 16px; border: 2px solid var(--border); border-radius: var(--radius-sm);
+  cursor: pointer; transition: var(--transition); font-size: 15px;
+  background: var(--card); user-select: none;
+}
+.option:hover { border-color: var(--primary); background: var(--primary-light); }
+.option.selected {
+  border-color: var(--primary); background: var(--primary-light);
+  box-shadow: 0 0 0 3px rgba(26,115,232,0.1);
+}
+.option-radio, .option-check {
+  width: 22px; height: 22px; border-radius: 50%; border: 2px solid var(--border);
+  display: flex; align-items: center; justify-content: center; flex-shrink: 0;
+  transition: var(--transition);
+}
+.option-radio { border-radius: 50%; }
+.option-check { border-radius: 6px; }
+.option.selected .option-radio, .option.selected .option-check {
+  border-color: var(--primary); background: var(--primary);
+}
+.option.selected .option-radio::after {
+  content: ''; width: 8px; height: 8px; border-radius: 50%; background: white;
+}
+.option.selected .option-check::after {
+  content: '✓'; color: white; font-size: 13px; font-weight: 700;
+}
+
+/* Likert Scale */
+.likert-row {
+  display: flex; justify-content: space-between; align-items: center;
+  padding: 12px 0; gap: 4px;
+}
+.likert-labels { display: flex; justify-content: space-between; margin-bottom: 6px; }
+.likert-label { font-size: 11px; color: var(--text-secondary); }
+.likert-btn {
+  flex: 1; text-align: center; padding: 12px 4px; border: 2px solid var(--border);
+  border-radius: var(--radius-sm); cursor: pointer; transition: var(--transition);
+  font-size: 14px; font-weight: 600; color: var(--text-secondary);
+  min-width: 0;
+}
+.likert-btn:hover { border-color: var(--primary); color: var(--primary); }
+.likert-btn.selected {
+  border-color: var(--primary); background: var(--primary);
+  color: white; box-shadow: 0 2px 8px rgba(26,115,232,0.3);
+}
+.likert-btn.s5.selected { background: #0d904f; border-color: #0d904f; }
+.likert-btn.s4.selected { background: #1a73e8; border-color: #1a73e8; }
+.likert-btn.s3.selected { background: #f9ab00; border-color: #f9ab00; }
+.likert-btn.s2.selected { background: #e8710a; border-color: #e8710a; }
+.likert-btn.s1.selected { background: #d93025; border-color: #d93025; }
+
+/* Text Area */
+.text-input {
+  width: 100%; min-height: 120px; padding: 14px; border: 2px solid var(--border);
+  border-radius: var(--radius-sm); font-size: 15px; font-family: inherit;
+  resize: vertical; transition: var(--transition); color: var(--text);
+  line-height: 1.6;
+}
+.text-input:focus { outline: none; border-color: var(--primary); box-shadow: 0 0 0 3px rgba(26,115,232,0.1); }
+.text-input::placeholder { color: #bdc1c6; }
+.char-count { text-align: right; font-size: 12px; color: var(--text-secondary); margin-top: 6px; }
+
+/* ========== Navigation ========== */
+.nav-row { display: flex; gap: 12px; margin-top: 8px; }
+.btn {
+  padding: 14px 28px; border-radius: 100px; font-size: 15px; font-weight: 600;
+  cursor: pointer; border: none; transition: var(--transition); display: inline-flex;
+  align-items: center; justify-content: center; gap: 6px;
+  font-family: inherit;
+}
+.btn-primary { background: var(--primary); color: white; flex: 1; }
+.btn-primary:hover { background: var(--primary-dark); box-shadow: 0 4px 12px rgba(26,115,232,0.3); transform: translateY(-1px); }
+.btn-primary:active { transform: scale(0.97); }
+.btn-primary:disabled { background: #c4d7f5; cursor: not-allowed; box-shadow: none; transform: none; }
+.btn-outline { background: white; color: var(--primary); border: 2px solid var(--border); }
+.btn-outline:hover { border-color: var(--primary); background: var(--primary-light); }
+.btn-outline:disabled { color: #bdc1c6; border-color: #e8eaed; cursor: not-allowed; }
+
+/* ========== Completion ========== */
+.completion { text-align: center; padding: 40px 24px; }
+.completion-icon {
+  width: 80px; height: 80px; border-radius: 50%; background: #e6f4ea;
+  display: flex; align-items: center; justify-content: center; font-size: 42px;
+  margin: 0 auto 20px;
+}
+.completion h2 { font-size: 22px; margin-bottom: 8px; color: var(--success); }
+.completion p { color: var(--text-secondary); font-size: 14px; line-height: 1.7; }
+.completion-actions { display: flex; gap: 12px; margin-top: 24px; flex-wrap: wrap; justify-content: center; }
+
+/* ========== Admin Panel ========== */
+.admin-bar {
+  position: fixed; bottom: 16px; right: 16px; z-index: 100;
+}
+.admin-btn {
+  width: 48px; height: 48px; border-radius: 50%; background: var(--card);
+  border: 2px solid var(--border); cursor: pointer; font-size: 20px;
+  box-shadow: var(--shadow-lg); display: flex; align-items: center; justify-content: center;
+  transition: var(--transition);
+}
+.admin-btn:hover { border-color: var(--primary); transform: scale(1.05); }
+
+.admin-modal-overlay {
+  position: fixed; inset: 0; background: rgba(0,0,0,0.5); z-index: 200;
+  display: flex; align-items: center; justify-content: center; padding: 20px;
+  animation: fadeIn 0.2s ease;
+}
+@keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+.admin-modal {
+  background: var(--card); border-radius: var(--radius); width: 100%; max-width: 600px;
+  max-height: 80vh; overflow-y: auto; padding: 28px 24px; box-shadow: var(--shadow-lg);
+}
+.admin-modal h3 { font-size: 18px; margin-bottom: 16px; display: flex; align-items: center; gap: 8px; }
+.admin-stats { display: flex; gap: 12px; margin-bottom: 20px; flex-wrap: wrap; }
+.admin-stat {
+  flex: 1; min-width: 100px; background: var(--primary-light); border-radius: var(--radius-sm);
+  padding: 14px; text-align: center;
+}
+.admin-stat .num { font-size: 28px; font-weight: 700; color: var(--primary); }
+.admin-stat .lbl { font-size: 12px; color: var(--text-secondary); margin-top: 4px; }
+.response-list { margin-top: 16px; }
+.response-item {
+  padding: 12px; border: 1px solid var(--border); border-radius: var(--radius-sm);
+  margin-bottom: 8px; cursor: pointer; transition: var(--transition);
+  display: flex; justify-content: space-between; align-items: center;
+}
+.response-item:hover { background: var(--primary-light); }
+.response-detail {
+  margin-top: 12px; padding: 16px; background: #f8f9fa; border-radius: var(--radius-sm);
+  font-size: 14px; line-height: 2;
+}
+.admin-actions { display: flex; gap: 8px; margin-top: 16px; flex-wrap: wrap; }
+
+/* ========== Toast ========== */
+.toast {
+  position: fixed; top: 20px; left: 50%; transform: translateX(-50%);
+  background: #323232; color: white; padding: 12px 24px; border-radius: 100px;
+  font-size: 14px; font-weight: 500; z-index: 300;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.2);
+  animation: toastIn 0.3s ease, toastOut 0.3s ease 2s forwards;
+}
+@keyframes toastIn { from { opacity: 0; transform: translateX(-50%) translateY(-20px); } to { opacity: 1; transform: translateX(-50%) translateY(0); } }
+@keyframes toastOut { from { opacity: 1; } to { opacity: 0; } }
+
+/* ========== Responsive ========== */
+@media (max-width: 480px) {
+  body { padding: 10px 8px 30px; }
+  .card { padding: 20px 16px; }
+  .card-welcome { padding: 28px 16px; }
+  .q-text { font-size: 15px; }
+  .option { padding: 12px 14px; font-size: 14px; }
+  .likert-btn { font-size: 12px; padding: 10px 2px; }
+  .btn { padding: 12px 20px; font-size: 14px; }
+  .welcome-meta { gap: 16px; }
+}
+
+/* ========== Print ========== */
+@media print {
+  body { background: white; }
+  .header, .progress-wrap, .nav-row, .admin-bar, .admin-modal-overlay { display: none !important; }
+  .card { box-shadow: none; border: 1px solid #ddd; page-break-inside: avoid; }
+}
+</style>
+</head>
+<body>
+
+<div class="app-container" id="app">
+  <!-- Dynamically rendered -->
+</div>
+
+<!-- Admin FAB -->
+<div class="admin-bar">
+  <button class="admin-btn" id="adminFab" title="管理面板">⚙️</button>
+</div>
+<div id="adminOverlay"></div>
+
+<!-- Toast Container -->
+<div id="toastContainer"></div>
+
+<script>
+
+// ============================================================
+// Supabase API (fetch-based, no external library needed)
+// ============================================================
+const SB_URL = 'https://ojrickkrhflqataggcyx.supabase.co';
+const SB_KEY = 'sb_publishable_XoCCIoxm84_rhXEeHFogug_5-tmS8Bk';
+
+async function sbInsert(answers) {
+  const res = await fetch(SB_URL + '/rest/v1/responses', {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+      'apikey': SB_KEY,
+      'Authorization': 'Bearer ' + SB_KEY,
+      'Prefer': 'return=representation'
+    },
+    body: JSON.stringify([{ data: answers }])
+  });
+  if (!res.ok) throw new Error(await res.text());
+  return res.json();
+}
+
+async function sbGetAll() {
+  const res = await fetch(SB_URL + '/rest/v1/responses?select=*&order=created_at.desc', {
+    headers: { 'apikey': SB_KEY, 'Authorization': 'Bearer ' + SB_KEY }
+  });
+  if (!res.ok) throw new Error(await res.text());
+  return res.json();
+}
+
+async function sbClear() {
+  const res = await fetch(SB_URL + '/rest/v1/responses?id=gt.0', {
+    method: 'DELETE',
+    headers: { 'apikey': SB_KEY, 'Authorization': 'Bearer ' + SB_KEY }
+  });
+}
+
+async function sbCount() {
+  const res = await fetch(SB_URL + '/rest/v1/responses?select=count', {
+    headers: { 'apikey': SB_KEY, 'Authorization': 'Bearer ' + SB_KEY }
+  });
+  if (!res.ok) return { count: '?' };
+  return { count: (await res.json())[0]?.count || 0 };
+}
+
+// ============================================================
+// ============================================================
+// Survey Data Definition
+// ============================================================
+const SURVEY_CONFIG = {
+  title: '学府路地铁站换乘衔接调查问卷',
+  subtitle: '东北林业大学交通运输专业 · 课程设计调研',
+  institution: '东北林业大学',
+  targetSamples: 200,
+  questionCount: 15,
+  estimatedMinutes: 5,
+};
+
+const SECTIONS = [
+  { id: 'basic', title: '基本信息', icon: '👤' },
+  { id: 'travel', title: '出行特征', icon: '🚇' },
+  { id: 'transfer', title: '换乘衔接评价', icon: '🔗' },
+  { id: 'open', title: '开放建议', icon: '💬' },
+];
+
+const QUESTIONS = [
+  // Section A.1: 基本信息
+  {
+    id: 1, section: 'basic', type: 'single',
+    text: '您的性别：',
+    options: ['男', '女'],
+  },
+  {
+    id: 2, section: 'basic', type: 'single',
+    text: '您的年龄段：',
+    options: ['18岁以下', '18~25岁', '26~40岁', '41~60岁', '60岁以上'],
+  },
+  {
+    id: 3, section: 'basic', type: 'single',
+    text: '您的职业：',
+    options: ['学生', '上班族', '自由职业', '退休人员', '其他'],
+  },
+  // Section A.2: 出行特征
+  {
+    id: 4, section: 'travel', type: 'single',
+    text: '您本次出行的主要目的：',
+    options: ['通勤（上下学/上下班）', '购物消费', '休闲娱乐', '探亲访友', '其他'],
+  },
+  {
+    id: 5, section: 'travel', type: 'single',
+    text: '您到达学府路地铁站前使用的主要交通方式是：',
+    options: ['步行', '常规公交', '出租车/网约车', '私家车（停放在附近停车场）', '自行车/电动自行车', '共享单车', '其他'],
+  },
+  {
+    id: 6, section: 'travel', type: 'single',
+    text: '您到达学府路地铁站的出发地属于以下哪类：',
+    options: ['周边高校（黑大/理工/师大附中等）', '周边居住小区', '凯德广场等商业区', '其他区域（经公交/出租等接驳到达）'],
+  },
+  {
+    id: 7, section: 'travel', type: 'single',
+    text: '您出地铁站后将换乘何种交通方式前往最终目的地',
+    options: ['步行', '常规公交', '出租车/网约车', '私家车（停车场取车）', '自行车/电动自行车', '共享单车', '不换乘（目的地即在站点周边）', '其他'],
+    isCore: true,
+  },
+  {
+    id: 8, section: 'travel', type: 'single',
+    text: '您能接受的地铁出站后步行换乘最大距离为：',
+    options: ['100米以内（约1分钟）', '100~200米（约2~3分钟）', '200~400米（约3~5分钟）', '400米以上（5分钟以上）', '无所谓'],
+  },
+  {
+    id: 9, section: 'travel', type: 'single',
+    text: '若您换乘公交，您希望公交站距离地铁出入口多远为宜：',
+    options: ['50米以内', '50~100米', '100~150米', '150~200米', '200米以上也可接受'],
+  },
+  // Section A.3: 换乘衔接评价
+  {
+    id: 10, section: 'transfer', type: 'likert',
+    text: '您对地铁出站后步行至公交站的衔接便利性如何评价：',
+  },
+  {
+    id: 11, section: 'transfer', type: 'likert',
+    text: '您对地铁站周边出租车/网约车上落客区的设置如何评价：',
+  },
+  {
+    id: 12, section: 'transfer', type: 'likert',
+    text: '您对地铁站周边非机动车（共享单车/电动车）停放便利性如何评价：',
+  },
+  {
+    id: 13, section: 'transfer', type: 'likert',
+    text: '您对各交通方式之间的整体换乘衔接顺畅程度如何评价：',
+  },
+  {
+    id: 14, section: 'transfer', type: 'multi',
+    text: '您认为地铁站换乘衔接存在以下哪些问题（可多选）：',
+    options: ['公交站距离地铁口过远', '换乘路线缺少引导标识', '人行道过窄影响通行', '非机动车占道影响通行', '出租车/网约车停靠混乱', '换乘步行距离过长', '无明显问题'],
+  },
+  // Section A.4: 开放建议
+  {
+    id: 15, section: 'open', type: 'text',
+    text: '您对学府路地铁站换乘衔接优化有什么建议？（选填）',
+    placeholder: '请在此输入您的建议...',
+  },
+];
+
+const LIKERT_LABELS = ['非常不满意', '不满意', '一般', '满意', '非常满意'];
+const LIKERT_VALUES = [1, 2, 3, 4, 5];
+
+// ============================================================
+// State Management
+// ============================================================
+const STORAGE_KEY = 'xuefulu_survey_responses';
+const STATE_KEY = 'xuefulu_survey_state';
+
+function loadResponses() {
+  try {
+    return JSON.parse(localStorage.getItem(STORAGE_KEY) || '[]');
+  } catch { return []; }
+}
+function // saved to cloud {
+  localStorage.setItem(STORAGE_KEY, JSON.stringify(responses));
+}
+function loadState() {
+  try {
+    return JSON.parse(localStorage.getItem(STATE_KEY) || '{"step":"welcome","answers":{},"currentQ":0}');
+  } catch { return { step: 'welcome', answers: {}, currentQ: 0 }; }
+}
+function saveState(state) {
+  localStorage.setItem(STATE_KEY, JSON.stringify(state));
+}
+
+let appState = loadState();
+let // loaded from cloud
+
+function resetSurvey() {
+  appState = { step: 'welcome', answers: {}, currentQ: 0 };
+  saveState(appState);
+  render();
+}
+
+// ============================================================
+// Render Engine
+// ============================================================
+const app = document.getElementById('app');
+
+function render() {
+  switch (appState.step) {
+    case 'welcome': renderWelcome(); break;
+    case 'survey': renderQuestion(); break;
+    case 'complete': renderComplete(); break;
+    default: renderWelcome();
+  }
+  updateProgress();
+}
+
+function updateProgress() {
+  if (appState.step !== 'survey') return;
+  const answered = Object.keys(appState.answers).length;
+  const total = QUESTIONS.length;
+  const pct = Math.round((answered / total) * 100);
+  document.getElementById('progressPct').textContent = `${pct}%`;
+  document.getElementById('progressFill').style.width = `${pct}%`;
+  document.getElementById('progressLabel').textContent = `已完成 ${answered}/${total} 题`;
+}
+
+function getCurrentSection() {
+  if (appState.currentQ >= QUESTIONS.length) return null;
+  return QUESTIONS[appState.currentQ].section;
+}
+
+// ========== Welcome Page ==========
+function renderWelcome() {
+  app.innerHTML = `
+    <div class="header">
+      <div class="header-icon">🚇</div>
+      <div class="header-info">
+        <div class="header-title">${SURVEY_CONFIG.title}</div>
+        <div class="header-sub">${SURVEY_CONFIG.subtitle}</div>
+      </div>
+      <div class="header-badge">课程设计</div>
+    </div>
+
+    <div class="card card-welcome">
+      <div class="welcome-icon">📋</div>
+      <h1>${SURVEY_CONFIG.title}</h1>
+      <p class="subtitle">
+        您好！我们是<b>东北林业大学交通运输专业</b>的学生，正在开展学府路地铁站换乘衔接优化设计的课程调研。
+        本问卷旨在了解您在地铁站的换乘出行特征与衔接需求，调查结果<b>仅用于课程设计</b>，不涉及个人隐私。
+        感谢您的配合！
+      </p>
+
+      <div class="welcome-meta">
+        <div class="welcome-meta-item">
+          <div class="num">${SURVEY_CONFIG.questionCount}</div>
+          <div class="lbl">题目数量</div>
+        </div>
+        <div class="welcome-meta-item">
+          <div class="num">~${SURVEY_CONFIG.estimatedMinutes}min</div>
+          <div class="lbl">预计用时</div>
+        </div>
+        <div class="welcome-meta-item">
+          <div class="num">${SURVEY_CONFIG.targetSamples}+</div>
+          <div class="lbl">目标样本</div>
+        </div>
+      </div>
+
+      <div class="welcome-note">
+        📌 <b>问卷说明：</b>本问卷以线上形式发放（通过网站链接分享，受访者点击链接在线填写），
+        计划采集有效样本不少于<b>200份</b>，覆盖工作日与周末各一天，早高峰（7:00-9:00）、
+        晚高峰（17:00-19:00）及平峰时段。其中第<b>7题"出站后换乘方式"为核心问题</b>，
+        其统计结果即为本设计所需的各交通方式换乘分担率。
+      </div>
+
+      <div style="margin-top:28px;">
+        <button class="btn btn-primary" onclick="startSurvey()" style="font-size:16px; padding:16px 40px;">
+          开始填写问卷 ✍️
+        </button>
+      </div>
+    </div>
+  `;
+  document.getElementById('adminFab').style.display = 'block';
+}
+
+function startSurvey() {
+  appState.step = 'survey';
+  appState.currentQ = 0;
+  appState.answers = {};
+  saveState(appState);
+  render();
+  window.scrollTo({ top: 0, behavior: 'smooth' });
+}
+
+// ========== Question Page ==========
+function renderQuestion() {
+  if (appState.currentQ >= QUESTIONS.length) {
+    submitSurvey();
+    return;
+  }
+  const q = QUESTIONS[appState.currentQ];
+  const prevSection = appState.currentQ > 0 ? QUESTIONS[appState.currentQ - 1].section : null;
+  const showSectionHeader = q.section !== prevSection;
+  const sectionInfo = SECTIONS.find(s => s.id === q.section);
+  const isLast = appState.currentQ === QUESTIONS.length - 1;
+  const hasAnswer = appState.answers[q.id] !== undefined && appState.answers[q.id] !== '';
+  const canNext = q.type === 'text' ? true : (hasAnswer && (Array.isArray(appState.answers[q.id]) ? appState.answers[q.id].length > 0 : true));
+
+  let sectionHTML = '';
+  if (showSectionHeader && sectionInfo) {
+    sectionHTML = `<div class="q-section-title">${sectionInfo.icon} ${sectionInfo.title}</div>`;
+  }
+
+  let inputHTML = '';
+  switch (q.type) {
+    case 'single':
+      inputHTML = renderSingleChoice(q);
+      break;
+    case 'multi':
+      inputHTML = renderMultiChoice(q);
+      break;
+    case 'likert':
+      inputHTML = renderLikert(q);
+      break;
+    case 'text':
+      inputHTML = renderTextInput(q);
+      break;
+  }
+
+  const coreTag = q.isCore ? '<span class="q-core-tag">核心问题</span>' : '';
+
+  app.innerHTML = `
+    <div class="header">
+      <div class="header-icon">🚇</div>
+      <div class="header-info">
+        <div class="header-title">${SURVEY_CONFIG.title}</div>
+        <div class="header-sub">${SURVEY_CONFIG.subtitle}</div>
+      </div>
+      <div class="header-badge">${sectionInfo ? sectionInfo.icon + ' ' + sectionInfo.title : ''}</div>
+    </div>
+
+    <div class="progress-wrap">
+      <div class="progress-top">
+        <span class="progress-label" id="progressLabel">已完成 ${Object.keys(appState.answers).length}/${QUESTIONS.length} 题</span>
+        <span class="progress-pct" id="progressPct">${Math.round((Object.keys(appState.answers).length / QUESTIONS.length) * 100)}%</span>
+      </div>
+      <div class="progress-bar">
+        <div class="progress-fill" id="progressFill" style="width:${Math.round((Object.keys(appState.answers).length / QUESTIONS.length) * 100)}%"></div>
+      </div>
+    </div>
+
+    <div class="card" id="questionCard">
+      ${sectionHTML}
+      <div class="q-text">
+        <span class="q-num${q.isCore ? ' core' : ''}">${q.id}</span>
+        <span>${q.text}${coreTag}</span>
+      </div>
+      ${inputHTML}
+      <div class="nav-row">
+        ${appState.currentQ > 0 ? '<button class="btn btn-outline" onclick="prevQuestion()">← 上一题</button>' : ''}
+        <button class="btn btn-primary" onclick="nextQuestion()" ${!canNext && q.type !== 'text' ? 'disabled' : ''}>
+          ${isLast ? '提交问卷 ✓' : '下一题 →'}
+        </button>
+      </div>
+      ${!canNext && q.type !== 'text' ? '<div style="text-align:center;margin-top:8px;font-size:12px;color:var(--text-secondary);">请选择一个选项后继续</div>' : ''}
+    </div>
+
+    <div style="text-align:center;margin-top:12px;">
+      <button style="background:none;border:none;color:var(--text-secondary);font-size:12px;cursor:pointer;text-decoration:underline;" onclick="resetSurvey()">重新开始</button>
+    </div>
+  `;
+}
+
+function renderSingleChoice(q) {
+  const selected = appState.answers[q.id] || '';
+  return `<div class="options">
+    ${q.options.map((opt, i) => `
+      <div class="option ${selected === opt ? 'selected' : ''}" onclick="selectSingle(${q.id}, '${escapeHTML(opt)}')" data-value="${escapeHTML(opt)}">
+        <div class="option-radio ${selected === opt ? 'selected' : ''}"></div>
+        <span>${opt}</span>
+      </div>
+    `).join('')}
+  </div>`;
+}
+
+function renderMultiChoice(q) {
+  const selected = appState.answers[q.id] || [];
+  return `<div class="options">
+    ${q.options.map((opt, i) => `
+      <div class="option ${selected.includes(opt) ? 'selected' : ''}" onclick="toggleMulti(${q.id}, '${escapeHTML(opt)}')">
+        <div class="option-check ${selected.includes(opt) ? 'selected' : ''}"></div>
+        <span>${opt}</span>
+      </div>
+    `).join('')}
+  </div>`;
+}
+
+function renderLikert(q) {
+  const selected = appState.answers[q.id];
+  return `
+    <div class="likert-labels">
+      <span class="likert-label" style="color:#d93025;">1 - 非常不满意</span>
+      <span class="likert-label" style="color:#f9ab00;">3 - 一般</span>
+      <span class="likert-label" style="color:#0d904f;">5 - 非常满意</span>
+    </div>
+    <div class="likert-row">
+      ${LIKERT_VALUES.map((v, i) => `
+        <div class="likert-btn s${v} ${selected === v ? 'selected' : ''}" onclick="selectSingle(${q.id}, ${v})">
+          ${v}
+        </div>
+      `).join('')}
+    </div>
+    <div style="text-align:center;font-size:13px;color:var(--primary);margin-top:6px;font-weight:500;">
+      ${selected ? '已选择：' + LIKERT_LABELS[selected - 1] + '（' + selected + '分）' : '请点击上方数字进行评分'}
+    </div>
+  `;
+}
+
+function renderTextInput(q) {
+  const val = appState.answers[q.id] || '';
+  return `
+    <textarea class="text-input" id="textInput" placeholder="${q.placeholder || '请输入...'}" oninput="updateText(${q.id}, this.value)">${escapeHTML(val)}</textarea>
+    <div class="char-count"><span id="charCount">${val.length}</span> 字</div>
+  `;
+}
+
+// ========== User Actions ==========
+function selectSingle(qId, value) {
+  appState.answers[qId] = value;
+  saveState(appState);
+  renderQuestion();
+}
+
+function toggleMulti(qId, value) {
+  if (!Array.isArray(appState.answers[qId])) appState.answers[qId] = [];
+  const arr = appState.answers[qId];
+  // Don't allow "无明显问题" with other selections
+  if (value === '无明显问题') {
+    appState.answers[qId] = ['无明显问题'];
+  } else {
+    const idx = arr.indexOf(value);
+    if (idx >= 0) {
+      arr.splice(idx, 1);
+    } else {
+      // Remove "无明显问题" if selecting something else
+      const noProblemIdx = arr.indexOf('无明显问题');
+      if (noProblemIdx >= 0) arr.splice(noProblemIdx, 1);
+      arr.push(value);
+    }
+  }
+  saveState(appState);
+  renderQuestion();
+}
+
+function updateText(qId, value) {
+  appState.answers[qId] = value;
+  saveState(appState);
+  // Update char count live
+  const cc = document.getElementById('charCount');
+  if (cc) cc.textContent = value.length;
+}
+
+function nextQuestion() {
+  const q = QUESTIONS[appState.currentQ];
+  if (q.type !== 'text') {
+    const ans = appState.answers[q.id];
+    if (ans === undefined || ans === '' || (Array.isArray(ans) && ans.length === 0)) return;
+  }
+  appState.currentQ++;
+  saveState(appState);
+  render();
+  window.scrollTo({ top: 0, behavior: 'smooth' });
+}
+
+function prevQuestion() {
+  if (appState.currentQ > 0) {
+    appState.currentQ--;
+    saveState(appState);
+    render();
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  }
+}
+
+// ========== Submit ==========
+async function submitSurvey() {
+  showToast('📤 提交中...');
+  try {
+    const data = await sbInsert(appState.answers);
+    appState.step = 'complete';
+    appState.responseId = data?.[0]?.id || '';
+    saveState(appState);
+    render();
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+    showToast('✅ 提交成功！已同步至云端');
+  } catch(e) {
+    showToast('❌ 无法连接云端服务器');
+    console.error('Submit error:', e);
+  }
+}
+
+// ========== Completion Page ==========
+function renderComplete() {
+  app.innerHTML = `
+    <div class="header">
+      <div class="header-icon">🚇</div>
+      <div class="header-info">
+        <div class="header-title">${SURVEY_CONFIG.title}</div>
+        <div class="header-sub">${SURVEY_CONFIG.subtitle}</div>
+      </div>
+      <div class="header-badge" style="background:#e6f4ea;color:#0d904f;">已完成</div>
+    </div>
+
+    <div class="card completion">
+      <div class="completion-icon">🎉</div>
+      <h2>提交成功！</h2>
+      <p>
+        感谢您参与本次调查！<br>
+        您的回答将为学府路地铁站换乘衔接优化设计提供重要参考依据。
+      </p>
+      <p style="font-size:12px;color:var(--text-secondary);margin-top:8px;">
+        提交编号：${appState.responseId || 'N/A'}<br>
+        提交时间：${new Date().toLocaleString('zh-CN')}
+      </p>
+      <div class="completion-actions">
+        <button class="btn btn-primary" onclick="resetSurvey()">填写新问卷</button>
+        <button class="btn btn-outline" onclick="viewResponses()">查看收集数据</button>
+      </div>
+    </div>
+
+    <div style="text-align:center;margin-top:16px;padding:16px;background:var(--card);border-radius:var(--radius);box-shadow:var(--shadow);">
+      <p style="font-size:14px;color:var(--text-secondary);">
+        📊 数据实时同步至云端数据库
+      </p>
+      <p style="font-size:12px;color:var(--text-secondary);margin-top:4px;">
+        问卷说明：本问卷以线上形式发放（通过网站链接分享，受访者点击链接在线填写），<br>
+        计划采集有效样本不少于200份，覆盖工作日与周末各一天。
+      </p>
+    </div>
+  `;
+  document.getElementById('adminFab').style.display = 'block';
+}
+
+// ============================================================
+// Admin Panel
+// ============================================================
+let adminOpen = false;
+let expandedResponse = null;
+
+document.getElementById('adminFab').addEventListener('click', () => {
+  if (adminOpen) closeAdmin(); else openAdmin();
+});
+
+async function openAdmin() {
+  adminOpen = true;
+  try {
+    const data = await sbGetAll();
+    responses = (data || []).map(r => ({
+      id: r.id,
+      timestamp: r.created_at,
+      answers: r.data || {},
+    }));
+  } catch(e) {
+    responses = [];
+    showToast('⚠️ 无法连接云端');
+    return;
+  }
+  const overlay = document.getElementById('adminOverlay');
+
+  const q7Counts = getQ7Distribution();
+  const avgSatisfaction = getAvgSatisfaction();
+
+  overlay.innerHTML = `
+    <div class="admin-modal-overlay" onclick="closeAdmin()">
+      <div class="admin-modal" onclick="event.stopPropagation()">
+        <h3>📊 数据管理面板</h3>
+
+        <div class="admin-stats">
+          <div class="admin-stat">
+            <div class="num">${responses.length}</div>
+            <div class="lbl">已收集问卷</div>
+          </div>
+          <div class="admin-stat">
+            <div class="num">${getCompletionRate()}%</div>
+            <div class="lbl">完成率</div>
+          </div>
+          <div class="admin-stat">
+            <div class="num">${respondentsWithSuggestions()}</div>
+            <div class="lbl">含建议份数</div>
+          </div>
+        </div>
+
+        <h4 style="margin-bottom:8px;font-size:14px;">🔑 核心问题（Q7）换乘方式分布</h4>
+        <div style="margin-bottom:16px;font-size:13px;line-height:1.8;">
+          ${Object.entries(q7Counts).length > 0
+            ? Object.entries(q7Counts).sort((a,b) => b[1] - a[1]).map(([k, v]) =>
+                `<div style="display:flex;justify-content:space-between;padding:4px 8px;background:#f8f9fa;border-radius:6px;margin-bottom:4px;">
+                  <span>${k}</span><span style="font-weight:600;color:var(--primary);">${v}人 (${responses.length > 0 ? Math.round(v/responses.length*100) : 0}%)</span>
+                </div>`
+              ).join('')
+            : '<div style="color:var(--text-secondary);">暂无数据</div>'
+          }
+        </div>
+
+        <h4 style="margin-bottom:8px;font-size:14px;">⭐ 满意度平均分</h4>
+        <div style="margin-bottom:16px;font-size:13px;">
+          ${avgSatisfaction.map((s, i) => `
+            <div style="display:flex;justify-content:space-between;padding:4px 8px;background:#f8f9fa;border-radius:6px;margin-bottom:4px;">
+              <span>Q${i+10}. ${['公交衔接','出租/网约车','非机动车停放','整体换乘顺畅度'][i]}</span>
+              <span style="font-weight:600;color:${s > 3.5 ? 'var(--success)' : s > 2.5 ? 'var(--warning)' : 'var(--danger)'};">${s.toFixed(2)} / 5.00</span>
+            </div>
+          `).join('')}
+        </div>
+
+        <h4 style="margin-bottom:8px;font-size:14px;">📝 问卷记录</h4>
+        <div class="response-list">
+          ${responses.length === 0
+            ? '<div style="color:var(--text-secondary);text-align:center;padding:20px;">暂无数据</div>'
+            : responses.slice().reverse().map(r => `
+              <div class="response-item" onclick="toggleResponseDetail('${r.id}')">
+                <span>
+                  <span style="font-weight:600;">#${r.id.slice(0, 8)}</span>
+                  <span style="font-size:12px;color:var(--text-secondary);margin-left:8px;">${new Date(r.timestamp).toLocaleString('zh-CN')}</span>
+                </span>
+                <span style="font-size:12px;color:var(--primary);cursor:pointer;">${expandedResponse === r.id ? '收起 ▲' : '展开 ▼'}</span>
+              </div>
+              <div id="detail-${r.id}" style="display:${expandedResponse === r.id ? 'block' : 'none'};" class="response-detail">
+                ${renderResponseDetail(r)}
+              </div>
+            `).join('')
+          }
+        </div>
+
+        <div class="admin-actions">
+          <button class="btn btn-primary" onclick="exportCSV()" style="flex:0;">📥 导出CSV</button>
+          <button class="btn btn-outline" onclick="exportJSON()" style="flex:0;">📥 导出JSON</button>
+          <button class="btn btn-outline" onclick="clearAllData()" style="flex:0;color:var(--danger);border-color:var(--danger);">🗑 清空数据</button>
+          <button class="btn btn-outline" onclick="addMockData()" style="flex:0;">🎲 生成模拟数据</button>
+        </div>
+        <div style="text-align:center;margin-top:12px;">
+          <button class="btn btn-outline" onclick="closeAdmin()">关闭面板</button>
+        </div>
+      </div>
+    </div>
+  `;
+  document.getElementById('adminFab').style.display = 'none';
+}
+
+function closeAdmin() {
+  adminOpen = false;
+  expandedResponse = null;
+  document.getElementById('adminOverlay').innerHTML = '';
+  document.getElementById('adminFab').style.display = 'block';
+}
+
+function toggleResponseDetail(id) {
+  expandedResponse = expandedResponse === id ? null : id;
+  openAdmin(); // refresh
+}
+
+function renderResponseDetail(r) {
+  return QUESTIONS.map(q => {
+    const ans = r.answers[q.id];
+    let display = '';
+    if (q.type === 'likert' && ans) {
+      display = `${LIKERT_LABELS[ans - 1]}（${ans}分）`;
+    } else if (Array.isArray(ans)) {
+      display = ans.join('、') || '（未填）';
+    } else {
+      display = ans || '（未填）';
+    }
+    return `<div><b>Q${q.id}.</b> ${q.text} <span style="color:var(--primary);">→ ${display}</span></div>`;
+  }).join('');
+}
+
+// ========== Statistics Helpers ==========
+function getQ7Distribution() {
+  const counts = {};
+  responses.forEach(r => {
+    const ans = r.answers[7];
+    if (ans) counts[ans] = (counts[ans] || 0) + 1;
+  });
+  return counts;
+}
+
+function getAvgSatisfaction() {
+  const avgs = [];
+  for (let qId = 10; qId <= 13; qId++) {
+    const vals = responses.map(r => r.answers[qId]).filter(v => typeof v === 'number');
+    avgs.push(vals.length > 0 ? vals.reduce((a, b) => a + b, 0) / vals.length : 0);
+  }
+  return avgs;
+}
+
+function getCompletionRate() {
+  if (responses.length === 0) return 0;
+  const complete = responses.filter(r => Object.keys(r.answers).length >= QUESTIONS.length).length;
+  return Math.round((complete / responses.length) * 100);
+}
+
+function respondentsWithSuggestions() {
+  return responses.filter(r => r.answers[15] && r.answers[15].trim().length > 0).length;
+}
+
+// ========== Export ==========
+function exportCSV() {
+  const headers = ['编号', '提交时间', ...QUESTIONS.map(q => `Q${q.id}. ${q.text}`)];
+  const rows = responses.map(r => {
+    const row = [r.id, r.timestamp];
+    QUESTIONS.forEach(q => {
+      const ans = r.answers[q.id];
+      if (q.type === 'likert' && ans) {
+        row.push(`${LIKERT_LABELS[ans - 1]}(${ans}分)`);
+      } else if (Array.isArray(ans)) {
+        row.push(ans.join(';'));
+      } else {
+        row.push(ans || '');
+      }
+    });
+    return row;
+  });
+
+  const BOM = '﻿';
+  const csv = BOM + [headers, ...rows].map(row =>
+    row.map(cell => `"${String(cell).replace(/"/g, '""')}"`).join(',')
+  ).join('\n');
+
+  downloadFile(`学府路地铁站换乘衔接_问卷数据_${new Date().toISOString().slice(0,10)}.csv`, csv, 'text/csv;charset=utf-8');
+  showToast('📥 CSV文件已下载');
+}
+
+function exportJSON() {
+  const data = {
+    survey: SURVEY_CONFIG,
+    exportedAt: new Date().toISOString(),
+    totalResponses: responses.length,
+    responses: responses,
+    summary: {
+      q7Distribution: getQ7Distribution(),
+      avgSatisfaction: getAvgSatisfaction(),
+    },
+  };
+  downloadFile(`学府路地铁站换乘衔接_问卷数据_${new Date().toISOString().slice(0,10)}.json`, JSON.stringify(data, null, 2), 'application/json');
+  showToast('📥 JSON文件已下载');
+}
+
+function downloadFile(filename, content, mimeType) {
+  const blob = new Blob([content], { type: mimeType });
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement('a');
+  a.href = url;
+  a.download = filename;
+  document.body.appendChild(a);
+  a.click();
+  document.body.removeChild(a);
+  URL.revokeObjectURL(url);
+}
+
+function clearAllData() {
+  if (confirm('确定要清空所有问卷数据吗？此操作不可恢复！')) {
+    responses = [];
+    // saved to cloud
+    closeAdmin();
+    showToast('🗑 所有数据已清空');
+  }
+}
+
+// ============================================================
+// Mock Data Generator
+// ============================================================
+function addMockData() {
+  // 使用Fisher-Yates洗牌，保证每人选项不重复
+  function shuffled(arr) { const a = [...arr]; for (let i = a.length - 1; i > 0; i--) { const j = Math.floor(Math.random() * (i + 1)); [a[i], a[j]] = [a[j], a[i]]; } return a; }
+
+  // 为每人从完整选项池中均匀抽取（不重复抽取策略）
+  const genderPool    = shuffled(['男','男','男','男','男','男','男','男','男','男','男','男','男','男','男','女','女','女','女','女','女','女','女','女','女','女','女','女','女','女']);
+  const agePool       = shuffled(['18岁以下','18~25岁','18~25岁','18~25岁','18~25岁','18~25岁','18~25岁','18~25岁','18~25岁','18~25岁','18~25岁','18~25岁','18~25岁','26~40岁','26~40岁','26~40岁','26~40岁','26~40岁','26~40岁','26~40岁','26~40岁','26~40岁','41~60岁','41~60岁','41~60岁','41~60岁','41~60岁','41~60岁','60岁以上','60岁以上']);
+  const occPool       = shuffled(['学生','学生','学生','学生','学生','学生','学生','学生','学生','学生','学生','学生','上班族','上班族','上班族','上班族','上班族','上班族','上班族','上班族','上班族','上班族','自由职业','自由职业','自由职业','自由职业','退休人员','退休人员','退休人员','其他']);
+  const purposePool   = shuffled(['通勤（上下学/上下班）','通勤（上下学/上下班）','通勤（上下学/上下班）','通勤（上下学/上下班）','通勤（上下学/上下班）','通勤（上下学/上下班）','通勤（上下学/上下班）','通勤（上下学/上下班）','通勤（上下学/上下班）','通勤（上下学/上下班）','通勤（上下学/上下班）','购物消费','购物消费','购物消费','购物消费','购物消费','购物消费','购物消费','休闲娱乐','休闲娱乐','休闲娱乐','休闲娱乐','休闲娱乐','休闲娱乐','探亲访友','探亲访友','探亲访友','探亲访友','其他','其他']);
+  const arrivalPool   = shuffled(['步行','步行','步行','步行','步行','步行','步行','常规公交','常规公交','常规公交','常规公交','常规公交','常规公交','常规公交','常规公交','常规公交','出租车/网约车','出租车/网约车','出租车/网约车','出租车/网约车','私家车（停放在附近停车场）','私家车（停放在附近停车场）','共享单车','共享单车','共享单车','共享单车','自行车/电动自行车','自行车/电动自行车','其他','其他']);
+  const departPool    = shuffled(['周边高校（黑大/理工/师大附中等）','周边高校（黑大/理工/师大附中等）','周边高校（黑大/理工/师大附中等）','周边高校（黑大/理工/师大附中等）','周边高校（黑大/理工/师大附中等）','周边高校（黑大/理工/师大附中等）','周边高校（黑大/理工/师大附中等）','周边高校（黑大/理工/师大附中等）','周边高校（黑大/理工/师大附中等）','周边高校（黑大/理工/师大附中等）','周边居住小区','周边居住小区','周边居住小区','周边居住小区','周边居住小区','周边居住小区','周边居住小区','周边居住小区','周边居住小区','周边居住小区','凯德广场等商业区','凯德广场等商业区','凯德广场等商业区','凯德广场等商业区','凯德广场等商业区','凯德广场等商业区','其他区域（经公交/出租等接驳到达）','其他区域（经公交/出租等接驳到达）','其他区域（经公交/出租等接驳到达）','其他区域（经公交/出租等接驳到达）']);
+  const transferPool  = shuffled(['步行','步行','步行','步行','步行','步行','步行','步行','常规公交','常规公交','常规公交','常规公交','常规公交','常规公交','常规公交','常规公交','常规公交','出租车/网约车','出租车/网约车','出租车/网约车','出租车/网约车','出租车/网约车','私家车（停车场取车）','私家车（停车场取车）','共享单车','共享单车','共享单车','共享单车','共享单车','不换乘（目的地即在站点周边）','自行车/电动自行车','自行车/电动自行车','其他','其他']);
+  const walkPool      = shuffled(['100米以内（约1分钟）','100米以内（约1分钟）','100米以内（约1分钟）','100米以内（约1分钟）','100米以内（约1分钟）','100米以内（约1分钟）','100~200米（约2~3分钟）','100~200米（约2~3分钟）','100~200米（约2~3分钟）','100~200米（约2~3分钟）','100~200米（约2~3分钟）','100~200米（约2~3分钟）','100~200米（约2~3分钟）','100~200米（约2~3分钟）','200~400米（约3~5分钟）','200~400米（约3~5分钟）','200~400米（约3~5分钟）','200~400米（约3~5分钟）','200~400米（约3~5分钟）','200~400米（约3~5分钟）','200~400米（约3~5分钟）','200~400米（约3~5分钟）','400米以上（5分钟以上）','400米以上（5分钟以上）','400米以上（5分钟以上）','400米以上（5分钟以上）','无所谓','无所谓','无所谓','无所谓']);
+  const busPool       = shuffled(['50米以内','50米以内','50米以内','50米以内','50米以内','50~100米','50~100米','50~100米','50~100米','50~100米','50~100米','50~100米','50~100米','50~100米','100~150米','100~150米','100~150米','100~150米','100~150米','100~150米','100~150米','150~200米','150~200米','150~200米','150~200米','150~200米','200米以上也可接受','200米以上也可接受','200米以上也可接受','200米以上也可接受']);
+  const problemPool   = shuffled([
+    ['公交站距离地铁口过远'],['无明显问题'],['换乘路线缺少引导标识'],['无明显问题'],
+    ['人行道过窄影响通行'],['无明显问题'],['出租车/网约车停靠混乱'],['无明显问题'],
+    ['换乘步行距离过长'],['无明显问题'],['非机动车占道影响通行'],['无明显问题'],
+    ['公交站距离地铁口过远'],['换乘路线缺少引导标识'],['无明显问题'],['无明显问题'],
+    ['人行道过窄影响通行'],['无明显问题'],['出租车/网约车停靠混乱'],['换乘步行距离过长'],
+    ['无明显问题'],['非机动车占道影响通行'],['公交站距离地铁口过远'],['换乘路线缺少引导标识'],
+    ['无明显问题'],['无明显问题'],['出租车/网约车停靠混乱'],['人行道过窄影响通行'],
+    ['换乘步行距离过长'],['无明显问题'],
+  ]);
+  const suggestPool   = shuffled([
+    '公交站离出口有点远','共享单车太乱不好走','希望打车点近一些','还行吧没什么意见',
+    '高峰期公交等太久','出口到公交站的路不太好找','多设几个共享单车停放点吧',
+    '打车排队太长','希望能有个清晰的指路牌','没啥建议都挺好的',
+    '地铁口到停车场那段路太绕了','建议缩短公交站到地铁口的距离','出租车上下客经常堵',
+    '换乘公交的站台太小了','挺好的','共享单车经常找不到位置停',
+    '希望增加接驳公交线路','出租车上落客太乱了需要规范','走过街天桥太麻烦',
+    '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '',
+  ]);
+
+  const count = 30;
+  const newResponses = [];
+  for (let i = 0; i < count; i++) {
+    const seed = i * 0.01; // 每人不同的随机偏移
+    const ans = {};
+    ans[1]  = genderPool[i % genderPool.length];
+    ans[2]  = agePool[i % agePool.length];
+    ans[3]  = occPool[i % occPool.length];
+    ans[4]  = purposePool[i % purposePool.length];
+    ans[5]  = arrivalPool[i % arrivalPool.length];
+    ans[6]  = departPool[i % departPool.length];
+    ans[7]  = transferPool[i % transferPool.length];
+    ans[8]  = walkPool[i % walkPool.length];
+    ans[9]  = busPool[i % busPool.length];
+    // Likert: 每人偏离均值，避免千篇一律
+    ans[10] = Math.max(1, Math.min(5, Math.round(3.0 + Math.sin(i * 1.3) * 1.4 + (Math.random() - 0.5) * 1.6)));
+    ans[11] = Math.max(1, Math.min(5, Math.round(2.7 + Math.sin(i * 1.7 + 1) * 1.2 + (Math.random() - 0.5) * 1.4)));
+    ans[12] = Math.max(1, Math.min(5, Math.round(2.9 + Math.sin(i * 1.5 + 2) * 1.3 + (Math.random() - 0.5) * 1.6)));
+    ans[13] = Math.max(1, Math.min(5, Math.round(3.1 + Math.sin(i * 1.1 + 0.5) * 1.0 + (Math.random() - 0.5) * 1.4)));
+    ans[14] = problemPool[i % problemPool.length];
+    ans[15] = suggestPool[i % suggestPool.length];
+
+    newResponses.push({
+      id: Date.now().toString(36) + Math.random().toString(36).substr(2, 6) + i,
+      timestamp: new Date(Date.now() - Math.floor(Math.random() * 7 * 86400000)).toISOString(),
+      answers: ans,
+    });
+  }
+
+  // loaded from cloud
+  responses.push(...newResponses);
+  // saved to cloud
+  closeAdmin();
+  showToast(`🎲 已生成 ${count} 份模拟数据（总计 ${responses.length} 份）`);
+}
+
+function randomPick(arr) {
+  return arr[Math.floor(Math.random() * arr.length)];
+}
+
+function randomNormal(mean, std, min, max) {
+  let u = 0, v = 0;
+  while (u === 0) u = Math.random();
+  while (v === 0) v = Math.random();
+  let num = Math.sqrt(-2.0 * Math.log(u)) * Math.cos(2.0 * Math.PI * v);
+  num = num * std + mean;
+  return Math.max(min, Math.min(max, Math.round(num)));
+}
+
+// ============================================================
+// Utilities
+// ============================================================
+function escapeHTML(str) {
+  return String(str).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;');
+}
+
+function showToast(msg) {
+  const container = document.getElementById('toastContainer');
+  const toast = document.createElement('div');
+  toast.className = 'toast';
+  toast.textContent = msg;
+  container.appendChild(toast);
+  setTimeout(() => { if (toast.parentNode) toast.parentNode.removeChild(toast); }, 2500);
+}
+
+function viewResponses() {
+  openAdmin();
+}
+
+// ============================================================
+// Keyboard Navigation
+// ============================================================
+document.addEventListener('keydown', (e) => {
+  if (appState.step !== 'survey') return;
+  if (e.key === 'Enter' || e.key === 'ArrowRight') {
+    e.preventDefault();
+    const q = QUESTIONS[appState.currentQ];
+    const ans = appState.answers[q.id];
+    if (q.type !== 'text' && (ans === undefined || ans === '' || (Array.isArray(ans) && ans.length === 0))) return;
+    nextQuestion();
+  } else if (e.key === 'ArrowLeft') {
+    e.preventDefault();
+    prevQuestion();
+  } else if (e.key >= '1' && e.key <= '9' && appState.currentQ < QUESTIONS.length) {
+    const q = QUESTIONS[appState.currentQ];
+    const idx = parseInt(e.key) - 1;
+    if (q.type === 'single' && idx < q.options.length) {
+      e.preventDefault();
+      selectSingle(q.id, q.options[idx]);
+    } else if (q.type === 'likert' && idx < LIKERT_VALUES.length) {
+      e.preventDefault();
+      selectSingle(q.id, LIKERT_VALUES[idx]);
+    }
+  }
+});
+
+// ============================================================
+// Init
+// ============================================================
+render();
+console.log('🚇 学府路地铁站换乘衔接调查问卷系统已就绪');
+console.log('   - 共 ' + QUESTIONS.length + ' 道题目');
+console.log('   - 已收集 ' + responses.length + ' 份问卷数据');
+console.log('   - 点击右下角 ⚙️ 进入管理面板');
+console.log('   - 支持键盘快捷键：数字键选择、← → 翻题、Enter 下一题');
+</script>
+</body>
+</html>
