@@ -753,11 +753,7 @@ function prevQuestion() {
 async function submitSurvey() {
   showToast('📤 提交中...');
   try {
-    const { data, error } = await supabase
-      .from('responses')
-      .insert([{ data: appState.answers }])
-      .select();
-    if (error) throw error;
+    const data = await sbInsert(appState.answers);
     appState.step = 'complete';
     appState.responseId = data?.[0]?.id || '';
     saveState(appState);
@@ -824,11 +820,8 @@ document.getElementById('adminFab').addEventListener('click', () => {
 async function openAdmin() {
   adminOpen = true;
   try {
-    const { data, error } = await supabase
-      .from('responses')
-      .select('*')
-      .order('created_at', { ascending: false });
-    if (!error) {
+    const data = await sbGetAll();
+    if (data) {
       responses = (data || []).map(r => ({
         id: r.id,
         timestamp: r.created_at,
@@ -1034,7 +1027,7 @@ function downloadFile(filename, content, mimeType) {
 async function clearAllData() {
   if (confirm('确定要清空云端数据库中的所有问卷数据吗？此操作不可恢复！')) {
     try {
-      await supabase.from('responses').delete().neq('id', 0);
+      await sbClear();
       responses = [];
       closeAdmin();
       showToast('🗑 云端数据已清空');
@@ -1062,7 +1055,7 @@ async function addMockData() {
     for (let q of [10,11,12,13]) ans[q] = Math.max(1, Math.min(5, Math.round(2.5 + (Math.random()-0.5)*2.5)));
     ans[14] = [['无明显问题'],['公交站距离地铁口过远'],['无明显问题'],['换乘路线缺少引导标识'],['无明显问题']][i%5];
     ans[15] = '';
-    try { const {error} = await supabase.from('responses').insert([{data: ans}]); if (!error) ok++; } catch(e) {}
+    try { try { await sbInsert(ans); ok++; } catch(e) {} } catch(e) {}
   }
   closeAdmin(); await openAdmin();
   showToast('🎲 已生成 ' + ok + '/' + count + ' 份');
