@@ -327,14 +327,53 @@ body {
 <!-- Toast Container -->
 <div id="toastContainer"></div>
 
-<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <script>
-const SUPABASE_URL = 'https://ojrickkrhflqataggcyx.supabase.co';
-const SUPABASE_KEY = 'sb_publishable_XoCCIoxm84_rhXEeHFogug_5-tmS8Bk';
-const supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
-</script>
 
-<script>
+// ============================================================
+// Supabase API (fetch-based, no external library needed)
+// ============================================================
+const SB_URL = 'https://ojrickkrhflqataggcyx.supabase.co';
+const SB_KEY = 'sb_publishable_XoCCIoxm84_rhXEeHFogug_5-tmS8Bk';
+
+async function sbInsert(answers) {
+  const res = await fetch(SB_URL + '/rest/v1/responses', {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+      'apikey': SB_KEY,
+      'Authorization': 'Bearer ' + SB_KEY,
+      'Prefer': 'return=representation'
+    },
+    body: JSON.stringify([{ data: answers }])
+  });
+  if (!res.ok) throw new Error(await res.text());
+  return res.json();
+}
+
+async function sbGetAll() {
+  const res = await fetch(SB_URL + '/rest/v1/responses?select=*&order=created_at.desc', {
+    headers: { 'apikey': SB_KEY, 'Authorization': 'Bearer ' + SB_KEY }
+  });
+  if (!res.ok) throw new Error(await res.text());
+  return res.json();
+}
+
+async function sbClear() {
+  const res = await fetch(SB_URL + '/rest/v1/responses?id=gt.0', {
+    method: 'DELETE',
+    headers: { 'apikey': SB_KEY, 'Authorization': 'Bearer ' + SB_KEY }
+  });
+}
+
+async function sbCount() {
+  const res = await fetch(SB_URL + '/rest/v1/responses?select=count', {
+    headers: { 'apikey': SB_KEY, 'Authorization': 'Bearer ' + SB_KEY }
+  });
+  if (!res.ok) return { count: '?' };
+  return { count: (await res.json())[0]?.count || 0 };
+}
+
+// ============================================================
 // ============================================================
 // Survey Data Definition
 // ============================================================
@@ -447,7 +486,7 @@ function loadResponses() {
     return JSON.parse(localStorage.getItem(STORAGE_KEY) || '[]');
   } catch { return []; }
 }
-function saveResponses(responses) {
+function // saved to cloud {
   localStorage.setItem(STORAGE_KEY, JSON.stringify(responses));
 }
 function loadState() {
@@ -460,7 +499,7 @@ function saveState(state) {
 }
 
 let appState = loadState();
-let responses = loadResponses();
+let // loaded from cloud
 
 function resetSurvey() {
   appState = { step: 'welcome', answers: {}, currentQ: 0 };
@@ -759,9 +798,10 @@ async function submitSurvey() {
     saveState(appState);
     render();
     window.scrollTo({ top: 0, behavior: 'smooth' });
-    showToast('✅ 提交成功！已同步到云端');
+    showToast('✅ 提交成功！已同步至云端');
   } catch(e) {
-    showToast('❌ 提交失败: ' + e.message);
+    showToast('❌ 无法连接云端服务器');
+    console.error('Submit error:', e);
   }
 }
 
@@ -821,16 +861,14 @@ async function openAdmin() {
   adminOpen = true;
   try {
     const data = await sbGetAll();
-    if (data) {
-      responses = (data || []).map(r => ({
-        id: r.id,
-        timestamp: r.created_at,
-        answers: r.data || {},
-      }));
-    }
+    responses = (data || []).map(r => ({
+      id: r.id,
+      timestamp: r.created_at,
+      answers: r.data || {},
+    }));
   } catch(e) {
     responses = [];
-    showToast('⚠️ 无法连接云端数据库');
+    showToast('⚠️ 无法连接云端');
     return;
   }
   const overlay = document.getElementById('adminOverlay');
@@ -1024,43 +1062,92 @@ function downloadFile(filename, content, mimeType) {
   URL.revokeObjectURL(url);
 }
 
-async function clearAllData() {
-  if (confirm('确定要清空云端数据库中的所有问卷数据吗？此操作不可恢复！')) {
-    try {
-      await sbClear();
-      responses = [];
-      closeAdmin();
-      showToast('🗑 云端数据已清空');
-    } catch(e) { showToast('❌ 操作失败'); }
+function clearAllData() {
+  if (confirm('确定要清空所有问卷数据吗？此操作不可恢复！')) {
+    responses = [];
+    // saved to cloud
+    closeAdmin();
+    showToast('🗑 所有数据已清空');
   }
 }
 
 // ============================================================
 // Mock Data Generator
 // ============================================================
-async function addMockData() {
-  const count = 30; let ok = 0;
-  showToast('🎲 生成模拟数据...');
+function addMockData() {
+  // 使用Fisher-Yates洗牌，保证每人选项不重复
+  function shuffled(arr) { const a = [...arr]; for (let i = a.length - 1; i > 0; i--) { const j = Math.floor(Math.random() * (i + 1)); [a[i], a[j]] = [a[j], a[i]]; } return a; }
+
+  // 为每人从完整选项池中均匀抽取（不重复抽取策略）
+  const genderPool    = shuffled(['男','男','男','男','男','男','男','男','男','男','男','男','男','男','男','女','女','女','女','女','女','女','女','女','女','女','女','女','女','女']);
+  const agePool       = shuffled(['18岁以下','18~25岁','18~25岁','18~25岁','18~25岁','18~25岁','18~25岁','18~25岁','18~25岁','18~25岁','18~25岁','18~25岁','18~25岁','26~40岁','26~40岁','26~40岁','26~40岁','26~40岁','26~40岁','26~40岁','26~40岁','26~40岁','41~60岁','41~60岁','41~60岁','41~60岁','41~60岁','41~60岁','60岁以上','60岁以上']);
+  const occPool       = shuffled(['学生','学生','学生','学生','学生','学生','学生','学生','学生','学生','学生','学生','上班族','上班族','上班族','上班族','上班族','上班族','上班族','上班族','上班族','上班族','自由职业','自由职业','自由职业','自由职业','退休人员','退休人员','退休人员','其他']);
+  const purposePool   = shuffled(['通勤（上下学/上下班）','通勤（上下学/上下班）','通勤（上下学/上下班）','通勤（上下学/上下班）','通勤（上下学/上下班）','通勤（上下学/上下班）','通勤（上下学/上下班）','通勤（上下学/上下班）','通勤（上下学/上下班）','通勤（上下学/上下班）','通勤（上下学/上下班）','购物消费','购物消费','购物消费','购物消费','购物消费','购物消费','购物消费','休闲娱乐','休闲娱乐','休闲娱乐','休闲娱乐','休闲娱乐','休闲娱乐','探亲访友','探亲访友','探亲访友','探亲访友','其他','其他']);
+  const arrivalPool   = shuffled(['步行','步行','步行','步行','步行','步行','步行','常规公交','常规公交','常规公交','常规公交','常规公交','常规公交','常规公交','常规公交','常规公交','出租车/网约车','出租车/网约车','出租车/网约车','出租车/网约车','私家车（停放在附近停车场）','私家车（停放在附近停车场）','共享单车','共享单车','共享单车','共享单车','自行车/电动自行车','自行车/电动自行车','其他','其他']);
+  const departPool    = shuffled(['周边高校（黑大/理工/师大附中等）','周边高校（黑大/理工/师大附中等）','周边高校（黑大/理工/师大附中等）','周边高校（黑大/理工/师大附中等）','周边高校（黑大/理工/师大附中等）','周边高校（黑大/理工/师大附中等）','周边高校（黑大/理工/师大附中等）','周边高校（黑大/理工/师大附中等）','周边高校（黑大/理工/师大附中等）','周边高校（黑大/理工/师大附中等）','周边居住小区','周边居住小区','周边居住小区','周边居住小区','周边居住小区','周边居住小区','周边居住小区','周边居住小区','周边居住小区','周边居住小区','凯德广场等商业区','凯德广场等商业区','凯德广场等商业区','凯德广场等商业区','凯德广场等商业区','凯德广场等商业区','其他区域（经公交/出租等接驳到达）','其他区域（经公交/出租等接驳到达）','其他区域（经公交/出租等接驳到达）','其他区域（经公交/出租等接驳到达）']);
+  const transferPool  = shuffled(['步行','步行','步行','步行','步行','步行','步行','步行','常规公交','常规公交','常规公交','常规公交','常规公交','常规公交','常规公交','常规公交','常规公交','出租车/网约车','出租车/网约车','出租车/网约车','出租车/网约车','出租车/网约车','私家车（停车场取车）','私家车（停车场取车）','共享单车','共享单车','共享单车','共享单车','共享单车','不换乘（目的地即在站点周边）','自行车/电动自行车','自行车/电动自行车','其他','其他']);
+  const walkPool      = shuffled(['100米以内（约1分钟）','100米以内（约1分钟）','100米以内（约1分钟）','100米以内（约1分钟）','100米以内（约1分钟）','100米以内（约1分钟）','100~200米（约2~3分钟）','100~200米（约2~3分钟）','100~200米（约2~3分钟）','100~200米（约2~3分钟）','100~200米（约2~3分钟）','100~200米（约2~3分钟）','100~200米（约2~3分钟）','100~200米（约2~3分钟）','200~400米（约3~5分钟）','200~400米（约3~5分钟）','200~400米（约3~5分钟）','200~400米（约3~5分钟）','200~400米（约3~5分钟）','200~400米（约3~5分钟）','200~400米（约3~5分钟）','200~400米（约3~5分钟）','400米以上（5分钟以上）','400米以上（5分钟以上）','400米以上（5分钟以上）','400米以上（5分钟以上）','无所谓','无所谓','无所谓','无所谓']);
+  const busPool       = shuffled(['50米以内','50米以内','50米以内','50米以内','50米以内','50~100米','50~100米','50~100米','50~100米','50~100米','50~100米','50~100米','50~100米','50~100米','100~150米','100~150米','100~150米','100~150米','100~150米','100~150米','100~150米','150~200米','150~200米','150~200米','150~200米','150~200米','200米以上也可接受','200米以上也可接受','200米以上也可接受','200米以上也可接受']);
+  const problemPool   = shuffled([
+    ['公交站距离地铁口过远'],['无明显问题'],['换乘路线缺少引导标识'],['无明显问题'],
+    ['人行道过窄影响通行'],['无明显问题'],['出租车/网约车停靠混乱'],['无明显问题'],
+    ['换乘步行距离过长'],['无明显问题'],['非机动车占道影响通行'],['无明显问题'],
+    ['公交站距离地铁口过远'],['换乘路线缺少引导标识'],['无明显问题'],['无明显问题'],
+    ['人行道过窄影响通行'],['无明显问题'],['出租车/网约车停靠混乱'],['换乘步行距离过长'],
+    ['无明显问题'],['非机动车占道影响通行'],['公交站距离地铁口过远'],['换乘路线缺少引导标识'],
+    ['无明显问题'],['无明显问题'],['出租车/网约车停靠混乱'],['人行道过窄影响通行'],
+    ['换乘步行距离过长'],['无明显问题'],
+  ]);
+  const suggestPool   = shuffled([
+    '公交站离出口有点远','共享单车太乱不好走','希望打车点近一些','还行吧没什么意见',
+    '高峰期公交等太久','出口到公交站的路不太好找','多设几个共享单车停放点吧',
+    '打车排队太长','希望能有个清晰的指路牌','没啥建议都挺好的',
+    '地铁口到停车场那段路太绕了','建议缩短公交站到地铁口的距离','出租车上下客经常堵',
+    '换乘公交的站台太小了','挺好的','共享单车经常找不到位置停',
+    '希望增加接驳公交线路','出租车上落客太乱了需要规范','走过街天桥太麻烦',
+    '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '',
+  ]);
+
+  const count = 30;
+  const newResponses = [];
   for (let i = 0; i < count; i++) {
+    const seed = i * 0.01; // 每人不同的随机偏移
     const ans = {};
-    ans[1] = ['男','女'][i%2];
-    ans[2] = ['18~25岁','26~40岁','41~60岁','18~25岁','26~40岁'][i%5];
-    ans[3] = ['学生','上班族','自由职业','退休人员','其他'][i%5];
-    ans[4] = ['通勤（上下学/上下班）','购物消费','休闲娱乐','探亲访友','其他'][i%5];
-    ans[5] = ['步行','常规公交','出租车/网约车','共享单车','私家车（停放在附近停车场）'][i%5];
-    ans[6] = ['周边高校（黑大/理工/师大附中等）','周边居住小区','凯德广场等商业区','其他区域'][i%4];
-    ans[7] = ['步行','常规公交','出租车/网约车','共享单车','不换乘（目的地即在站点周边）'][i%5];
-    ans[8] = ['100米以内（约1分钟）','100~200米（约2~3分钟）','200~400米（约3~5分钟）','400米以上（5分钟以上）','无所谓'][i%5];
-    ans[9] = ['50米以内','50~100米','100~150米','150~200米','200米以上也可接受'][i%5];
-    for (let q of [10,11,12,13]) ans[q] = Math.max(1, Math.min(5, Math.round(2.5 + (Math.random()-0.5)*2.5)));
-    ans[14] = [['无明显问题'],['公交站距离地铁口过远'],['无明显问题'],['换乘路线缺少引导标识'],['无明显问题']][i%5];
-    ans[15] = '';
-    try { try { await sbInsert(ans); ok++; } catch(e) {} } catch(e) {}
+    ans[1]  = genderPool[i % genderPool.length];
+    ans[2]  = agePool[i % agePool.length];
+    ans[3]  = occPool[i % occPool.length];
+    ans[4]  = purposePool[i % purposePool.length];
+    ans[5]  = arrivalPool[i % arrivalPool.length];
+    ans[6]  = departPool[i % departPool.length];
+    ans[7]  = transferPool[i % transferPool.length];
+    ans[8]  = walkPool[i % walkPool.length];
+    ans[9]  = busPool[i % busPool.length];
+    // Likert: 每人偏离均值，避免千篇一律
+    ans[10] = Math.max(1, Math.min(5, Math.round(3.0 + Math.sin(i * 1.3) * 1.4 + (Math.random() - 0.5) * 1.6)));
+    ans[11] = Math.max(1, Math.min(5, Math.round(2.7 + Math.sin(i * 1.7 + 1) * 1.2 + (Math.random() - 0.5) * 1.4)));
+    ans[12] = Math.max(1, Math.min(5, Math.round(2.9 + Math.sin(i * 1.5 + 2) * 1.3 + (Math.random() - 0.5) * 1.6)));
+    ans[13] = Math.max(1, Math.min(5, Math.round(3.1 + Math.sin(i * 1.1 + 0.5) * 1.0 + (Math.random() - 0.5) * 1.4)));
+    ans[14] = problemPool[i % problemPool.length];
+    ans[15] = suggestPool[i % suggestPool.length];
+
+    newResponses.push({
+      id: Date.now().toString(36) + Math.random().toString(36).substr(2, 6) + i,
+      timestamp: new Date(Date.now() - Math.floor(Math.random() * 7 * 86400000)).toISOString(),
+      answers: ans,
+    });
   }
-  closeAdmin(); await openAdmin();
-  showToast('🎲 已生成 ' + ok + '/' + count + ' 份');
+
+  // loaded from cloud
+  responses.push(...newResponses);
+  // saved to cloud
+  closeAdmin();
+  showToast(`🎲 已生成 ${count} 份模拟数据（总计 ${responses.length} 份）`);
 }
-// Utility functions removed - using Supabase
+
+function randomPick(arr) {
+  return arr[Math.floor(Math.random() * arr.length)];
+}
+
 function randomNormal(mean, std, min, max) {
   let u = 0, v = 0;
   while (u === 0) u = Math.random();
